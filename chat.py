@@ -13,6 +13,10 @@ LOGS_DIR = ROOT / "logs"
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 MISSION_TEXT = (ROOT / "mission.md").read_text(encoding="utf-8")
+RUBRIC_TEXT = (ROOT / "rubric.md").read_text(encoding="utf-8")
+# Claude Haiku 4.5+ solo cachea bloques de >= 4096 tokens; mission.md solo no
+# alcanza (~3400 tokens), asi que se suma rubric.md para superar el piso.
+CACHED_REFERENCE_TEXT = MISSION_TEXT + "\n\n" + RUBRIC_TEXT
 
 MODELS = {
     "1": {
@@ -156,8 +160,9 @@ def build_messages(model, history, reasoning_effort):
                     "type": "text",
                     "text": (
                         "Sos un asistente util. A continuacion tenes como contexto "
-                        "de referencia el enunciado completo de la mision para poder "
-                        "responder preguntas sobre ella si te las hacen:\n\n" + MISSION_TEXT
+                        "de referencia el enunciado completo de la mision y su rubrica "
+                        "de correccion, para poder responder preguntas sobre ellos si "
+                        "te las hacen:\n\n" + CACHED_REFERENCE_TEXT
                     ),
                     "cache_control": {"type": "ephemeral"},
                 }

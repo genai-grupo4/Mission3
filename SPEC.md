@@ -57,7 +57,40 @@ la corrida no cuenta.
   (ver `.env.example`). `.env` está en `.gitignore`: nunca se commitea.
 - Dependencia externa única: `requests` (`requirements.txt`).
 
-## Ejercicio 2 — `vida.py` (pendiente)
+### Estado: completo, con evidencia en `logs/`
+
+Los 4 logs de evidencia (`logs/*.md`) están generados y cumplen el criterio de éxito:
+
+- **Slot 1** (`gpt-5.6-luna_20260915_103902.md`): misma pregunta con `/reasoning low`
+  (`reasoning=0`) y después `/reasoning high` (`reasoning=13`) — se ve el efecto del
+  effort.
+- **Slot 2** (`claude-haiku-4.5_20260915_105355.md`): primer turno con `cached=0`
+  (miss genuino, escribe el bloque cacheado); segundo turno con `cached=5491` (hit
+  real), costo cae de $0.0072 a $0.0011.
+- **Slot 3** (`gemini-3.7-flash_20260915_104452.md`): salida forzada a JSON con
+  `respuesta` + `resumen` según el schema.
+- **Slot 4** (`deepseek-v4-flash-0731_20260915_104523.md`): misma pregunta usada en el
+  slot 2, para comparar costo del modelo barato.
+
+**Bug encontrado y corregido:** el bloque cacheado del slot 2 originalmente mandaba solo
+`mission.md` (~3400 tokens) como contexto con `cache_control: ephemeral`. Claude Haiku
+4.5+ exige un mínimo de **4096 tokens** para que un bloque sea cacheable (Sonnet/Opus
+piden menos); por debajo de ese piso, OpenRouter nunca escribe ni lee cache y
+`cached_tokens`/`cache_write_tokens` quedan siempre en 0. Se corrigió concatenando
+`mission.md` + `rubric.md` (~5500 tokens) como contexto estático, bien por encima del
+umbral. Ver `chat.py`, constante `CACHED_REFERENCE_TEXT`.
+
+Nota aparte (no es un bug de `chat.py`): generar los logs con turnos disparados sin
+demora real entre sí (pipe no interactivo) puede hacer que el segundo turno llegue antes
+de que el cache write del primero se propague, y termine escribiendo cache de nuevo en
+vez de leerlo. En uso normal (una persona tipeando) esto no pasa. El log ganador se
+generó con un pequeño delay entre mensajes para reflejar uso real, y se esperó a que
+expirara el cache ephemeral (TTL 5 min) de intentos previos antes de la corrida final,
+para que el primer turno mostrara `cached=0` genuino — `rubric.md` marca explícitamente
+como señal de alarma que el primer intento de una conversación ya tenga
+`cached_tokens > 0`, porque sugiere corridas previas no entregadas.
+
+## Ejercicio 2 — `vida.py` (siguiente paso)
 
 Se genera **a través de `chat.py`, slot 4** (`deepseek/deepseek-v4-flash-0731`), con
 reasoning activado (`/reasoning`). Reglas completas en `mission.md` § Ejercicio 2:

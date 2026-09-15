@@ -61,5 +61,6 @@ forma de trabajo (`rubric.md` § 4.3).
 
 ## Estado y próximos pasos
 
-Ver `SPEC.md`. Resumen: ejercicio 1 (interfaz) implementado, pendiente generar logs de
-evidencia con crédito cargado en OpenRouter; ejercicios 2 y 3 no iniciados.
+Ver `SPEC.md`. Resumen: ejercicio 1 completo (interfaz + logs de evidencia en `logs/`);
+ejercicios 2 y 3 no iniciados. Próximo paso: prompt para generar `vida.py` por el slot 4
+del chat.

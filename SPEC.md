@@ -112,14 +112,28 @@ Generado a través de `chat.py`, slot 4 (`deepseek/deepseek-v4-flash-0731`), con
 
 Estado: completo.
 
-## Ejercicio 3 — Informe (pendiente)
+## Ejercicio 3 — Informe
 
-Informe de costos y tokens de todos los intentos del ejercicio 2, más las tres respuestas
-del "trabajo previo obligatorio" de `mission.md` (qué es un router, mapa de modelos,
-comparación de parámetros). Sin esto el ejercicio 3 no puede superar 15/20 (ver
-`rubric.md`).
+Informe completo en `informe_ejercicio3.md`. Resumen:
 
-Estado: no iniciado.
+- **Trabajo previo obligatorio**: `exploracion.md`. Datos de precios/contexto/parámetros
+  sacados de `GET /api/v1/models` (fuente reproducible); benchmarks (Artificial
+  Analysis: Intelligence/Coding/Agentic) para los 4 modelos del ejercicio 1, sacados
+  por captura de la vista comparativa (se renderizan con JS, no están en la API).
+- **Costos del ejercicio 2**: un solo intento (ganador en 1 prompt, sin corridas
+  quemadas). Usage: `input=1145 output=29418 reasoning=29091 cached=1065
+  cost=$0.00295565`. El 99% del output facturado es razonamiento.
+- **Contraste contra gasto real**: no hay cuenta/dashboard web (la cátedra dio una API
+  key suelta), así que se usó `GET /api/v1/key` para leer el uso acumulado real de la
+  key ($0.05906003). La tabla del informe suma **todos** los logs, incluyendo
+  `logs/ejercicio1-slot2-cache-bug-redo.md` (6 llamadas de debug del bug de caching del
+  slot 2, reconstruidas llamada por llamada por no haber quedado logueadas en su
+  momento): total $0.05905904, cierra contra la key con ~$0.000001 de diferencia
+  (redondeo).
+- **Conclusión**: bajar `reasoning.effort` a `medium` en el prompt de `vida.py` — el
+  contrato ya es lo bastante completo como para no depender de razonamiento `high`.
+
+Estado: completo.
 
 ## Fuera de alcance
 

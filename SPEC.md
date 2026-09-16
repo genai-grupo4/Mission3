@@ -78,7 +78,11 @@ Los 4 logs de evidencia (`logs/*.md`) están generados y cumplen el criterio de 
 piden menos); por debajo de ese piso, OpenRouter nunca escribe ni lee cache y
 `cached_tokens`/`cache_write_tokens` quedan siempre en 0. Se corrigió concatenando
 `mission.md` + `rubric.md` (~5500 tokens) como contexto estático, bien por encima del
-umbral. Ver `chat.py`, constante `CACHED_REFERENCE_TEXT`.
+umbral. Ver `chat.py`, constante `CACHED_REFERENCE_TEXT`. El costo real de diagnosticar
+este bug (llamadas de debug fuera de `chat.py` + conversaciones descartadas) queda
+reconstruido llamada por llamada en `logs/ejercicio1-slot2-cache-bug-redo.md`, para que
+el informe del ejercicio 3 pueda cerrar contra el dashboard de OpenRouter sin un gasto
+sin explicar.
 
 Nota aparte (no es un bug de `chat.py`): generar los logs con turnos disparados sin
 demora real entre sí (pipe no interactivo) puede hacer que el segundo turno llegue antes

@@ -30,9 +30,12 @@ de cada ejercicio.
 - **`.env` nunca se commitea.** La API key vive solo ahí o en la variable de entorno
   `OPENROUTER_API_KEY`. Si algo pide la key, va en `.env` (basado en `.env.example`),
   nunca hardcodeada en `chat.py` ni en un commit.
-- **No hay presupuesto para pulir la interfaz.** La misión dice explícitamente que no
-  puntúa que el chat sea lindo. Preferir simplicidad y que los 4 modelos y el usage
-  funcionen antes que agregar UI, colores o frameworks.
+- **La rúbrica no puntúa que el chat sea lindo** (lo dice explícitamente `mission.md`).
+  La UI web con estética J.A.R.V.I.S. (`static/`) es una decisión deliberada del grupo,
+  un extra sobre el mínimo pedido — no gastar tiempo de más ahí a costa de los
+  ejercicios 2 y 3, que sí puntúan. La lógica de negocio (modelos, usage, logs) vive en
+  `core.py`, compartida y sin acoplar al frontend, para que pulir la UI nunca implique
+  tocar cómo se llama a OpenRouter o cómo se escriben los logs.
 
 ## Cómo correr el chat
 
@@ -42,8 +45,10 @@ pip3 install -r requirements.txt
 python3 chat.py
 ```
 
-Comandos dentro del chat: `/modelo` (cambiar de modelo, arranca conversación nueva),
-`/reasoning <low|medium|high|off>`, `/salir`.
+Abre un server local en `http://127.0.0.1:5000`: elegir modelo (slot) arranca una
+conversación nueva con su propio log; el toggle de reasoning effort ajusta
+`low|medium|high|off` del modelo activo. La lógica de OpenRouter (modelos, llamadas,
+usage, logs) está en `core.py`; `chat.py` es el server Flask que la expone.
 
 ## Cómo correr los tests de Conway
 

@@ -1,17 +1,19 @@
 # Misión 3 — El prompt mínimo
 
-Interfaz de chat propia sobre [OpenRouter](https://openrouter.ai) (`chat.py`), usada para
-resolver el Juego de la Vida de Conway en el mínimo de prompts posible, con auditoría
-completa de tokens y costo por respuesta. Enunciado completo en `mission.md`, criterios
-de corrección en `rubric.md`.
+Interfaz de chat propia sobre [OpenRouter](https://openrouter.ai) (`chat.py`, estilo
+J.A.R.V.I.S.), usada para resolver el Juego de la Vida de Conway en el mínimo de
+prompts posible, con auditoría completa de tokens y costo por respuesta. Enunciado
+completo en `mission.md`, criterios de corrección en `rubric.md`.
 
 ## Estructura del repo
 
 | Archivo / carpeta | Qué es |
 |---|---|
-| `chat.py` | Interfaz de chat CLI sobre OpenRouter (ejercicio 1) |
+| `chat.py` | Server web (Flask) de la interfaz de chat sobre OpenRouter (ejercicio 1) |
+| `core.py` | Lógica de OpenRouter compartida: modelos, llamadas a la API, usage, logs |
+| `static/` | Frontend de la interfaz (HTML/CSS/JS), estética J.A.R.V.I.S. |
 | `logs/` | Un log `.md` por conversación real con la interfaz, evidencia de auditoría |
-| `vida.py` | Solución al Juego de la Vida de Conway, generada por chat (ejercicio 2, pendiente) |
+| `vida.py` | Solución al Juego de la Vida de Conway, generada por chat (ejercicio 2) |
 | `test_vida.py` | Script de testing de la cátedra — no se toca |
 | `mission.md` | Enunciado completo de la misión |
 | `rubric.md` | Cómo se corrige |
@@ -26,11 +28,11 @@ pip3 install -r requirements.txt
 python3 chat.py
 ```
 
-Comandos dentro del chat:
+Abre un server local en `http://127.0.0.1:5000`. Desde el navegador:
 
-- `/modelo` — elegir modelo (arranca una conversación nueva, con su propio log)
-- `/reasoning <low|medium|high|off>` — ajustar el esfuerzo de razonamiento del modelo activo
-- `/salir` — terminar
+- Elegí uno de los 4 slots de modelo para arrancar una conversación nueva (con su propio log).
+- El toggle de `REASONING EFFORT` ajusta el esfuerzo de razonamiento del modelo activo.
+- Cada respuesta muestra su usage (input/output/reasoning/cached/cost) debajo del mensaje.
 
 Sirve 4 modelos, cada uno pensado para ejercitar una capacidad distinta de la API (ver
 `SPEC.md` para el detalle): reasoning effort, prompt caching, salidas estructuradas y un

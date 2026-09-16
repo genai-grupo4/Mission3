@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>J.A.R.V.I.S. — Misión 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap"
+  rel="stylesheet"
+/>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="grid-overlay"></div>
+  <div class="vignette"></div>
+
+  <div id="boot" class="boot">
+    <div class="boot-lines" id="boot-lines"></div>
+  </div>
+
+  <div id="app" class="app hidden">
+    <header class="hud-header">
+      <div class="reactor" id="reactor" title="J.A.R.V.I.S.">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+        <div class="core"></div>
+      </div>
+      <div class="title-block">
+        <h1>J.A.R.V.I.S.</h1>
+        <p>MISIÓN 3 &middot; el prompt mínimo &middot; OpenRouter</p>
+      </div>
+      <div class="session-readout">
+        <div class="readout-item"><span class="k">MODELO</span><span class="v" id="active-model">—</span></div>
+        <div class="readout-item"><span class="k">LOG</span><span class="v" id="active-log">—</span></div>
+        <div class="readout-item"><span class="k">COSTO SESIÓN</span><span class="v cost" id="session-cost">$0.000000</span></div>
+      </div>
+    </header>
+
+    <nav class="slots" id="slots"></nav>
+
+    <div class="controls-bar">
+      <span class="label">REASONING&nbsp;EFFORT</span>
+      <div class="effort-toggle" id="effort-toggle">
+        <button type="button" data-effort="off">OFF</button>
+        <button type="button" data-effort="low">LOW</button>
+        <button type="button" data-effort="medium">MED</button>
+        <button type="button" data-effort="high">HIGH</button>
+      </div>
+      <span class="status-pill" id="status-pill">EN ESPERA</span>
+    </div>
+
+    <main class="chat-panel" id="chat-panel">
+      <div class="chat-empty" id="chat-empty">SELECCIONÁ UN MODELO PARA INICIAR LA CONVERSACIÓN</div>
+    </main>
+
+    <form class="input-bar" id="input-form">
+      <input type="text" id="input-text" placeholder="Escribí tu mensaje..." disabled autocomplete="off" />
+      <button type="submit" id="send-btn" disabled>ENVIAR</button>
+    </form>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -3,11 +3,19 @@
 Describe lo que existe en este repo hoy y cómo encaja con lo pedido en `mission.md`
 (rúbrica en `rubric.md`).
 
-## Ejercicio 1 — Interfaz de chat (`chat.py`)
+## Ejercicio 1 — Interfaz de chat (`chat.py` + `core.py` + `static/`)
 
-CLI en Python (stdlib + `requests`) que habla con OpenRouter (`/api/v1/chat/completions`).
-No tiene UI gráfica: es un loop de input/output por terminal, deliberadamente simple
-(la misión no puntúa estética).
+Server web local (Flask) que habla con OpenRouter (`/api/v1/chat/completions`), con un
+frontend propio (HTML/CSS/JS en `static/`) de estética J.A.R.V.I.S. La lógica de
+OpenRouter (modelos, llamadas a la API, usage, logs `.md`) vive en `core.py`, separada
+del transporte (`chat.py`, server Flask) para que la UI se pueda pulir sin tocar cómo
+se arma cada request ni cómo se audita el gasto. La rúbrica no puntúa que la interfaz
+sea linda — esta versión es un extra deliberado del grupo sobre el mínimo pedido, no un
+requisito de la misión.
+
+La CLI original (loop de input/output por terminal) queda documentada acá como
+antecedente: mismo contrato de OpenRouter, mismos logs, solo cambió el transporte
+(terminal → HTTP + navegador).
 
 ### Modelos servidos
 
@@ -20,13 +28,13 @@ No tiene UI gráfica: es un loop de input/output por terminal, deliberadamente s
 
 ### Comportamiento
 
-- Al arrancar, pide elegir modelo y abre un log nuevo.
-- `/modelo`: vuelve a pedir modelo y **arranca conversación nueva** (nuevo log, historial vacío). Nunca mezcla modelos en un mismo log.
-- `/reasoning <low|medium|high|off>`: setea `reasoning.effort` en el request. Aplica al modelo activo; no todos los proveedores lo soportan, pero la interfaz no lo restringe (documentar en el informe si un modelo lo ignora).
-- `/salir`: termina el programa.
-- Cada request manda `"usage": {"include": true}` para asegurar que la respuesta traiga `usage` completo (incluye `cost`).
-- Después de cada respuesta se imprime en consola: `input`, `output`, `reasoning`, `cached`, `cost`, `cache_discount` (si viene).
-- Cada turno (user y assistant) se agrega al archivo de log de la conversación activa, con timestamp real al momento de la llamada y, para el assistant, la línea de usage.
+- `python3 chat.py` levanta un server Flask en `http://127.0.0.1:5000`; la interfaz vive en el navegador.
+- Elegir un slot (botón de modelo en la UI): **arranca conversación nueva** (nuevo log, historial vacío). Nunca mezcla modelos en un mismo log — endpoint `POST /api/session`.
+- Toggle de `REASONING EFFORT` (`low|medium|high|off`): setea `reasoning.effort` en el request — endpoint `POST /api/reasoning`. Aplica al modelo activo; no todos los proveedores lo soportan, pero la interfaz no lo restringe (documentar en el informe si un modelo lo ignora).
+- Enviar un mensaje: `POST /api/message`.
+- Cada request a OpenRouter manda `"usage": {"include": true}` para asegurar que la respuesta traiga `usage` completo (incluye `cost`).
+- Después de cada respuesta se muestra en la UI (chips de telemetría bajo el mensaje): `input`, `output`, `reasoning`, `cached`, `cost`.
+- Cada turno (user y assistant) se agrega al archivo de log de la conversación activa, con timestamp real al momento de la llamada y, para el assistant, la línea de usage — misma función `append_log` de siempre, ahora en `core.py`.
 
 ### Logs
 

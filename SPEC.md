@@ -90,15 +90,23 @@ para que el primer turno mostrara `cached=0` genuino — `rubric.md` marca expl�
 como señal de alarma que el primer intento de una conversación ya tenga
 `cached_tokens > 0`, porque sugiere corridas previas no entregadas.
 
-## Ejercicio 2 — `vida.py` (siguiente paso)
+## Ejercicio 2 — `vida.py`
 
-Se genera **a través de `chat.py`, slot 4** (`deepseek/deepseek-v4-flash-0731`), con
-reasoning activado (`/reasoning`). Reglas completas en `mission.md` § Ejercicio 2:
-contrato de CLI fijo, máximo 2 prompts por conversación ganadora, prohibido parchear a
-mano, caching obligatorio (la parte estática del prompt va primero e idéntica en todos
-los intentos). Todos los intentos —incluidos los quemados— quedan como logs en el repo.
+Generado a través de `chat.py`, slot 4 (`deepseek/deepseek-v4-flash-0731`), con
+`reasoning.effort=high`. Log ganador: `logs/deepseek-v4-flash-0731_20260915_185232.md`.
 
-Estado: no iniciado.
+- **1 solo prompt** (no hizo falta el segundo de pulido): el contrato completo
+  (rol, contexto, instrucciones, restricciones, 6 ejemplos few-shot con los casos
+  clave — blinker, bloque, célula sola, borde sin wrap, glider, generación 0) salió
+  correcto a la primera.
+- `test_vida.py` corre los 9 tests en verde contra el `vida.py` tal cual salió del
+  chat, sin edición manual.
+- Usage del intento: `input=1145 output=29418 reasoning=29091 cached=1065
+  cost=$0.00295565`. El `cached=1065` viene de un prefijo compartido con una corrida
+  previa del mismo slot 4 durante el ejercicio 1 (mismo modelo, cache automático por
+  prefijo de DeepSeek); no hizo falta un segundo intento para verlo.
+
+Estado: completo.
 
 ## Ejercicio 3 — Informe (pendiente)
 

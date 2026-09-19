@@ -5,6 +5,8 @@ J.A.R.V.I.S.), usada para resolver el Juego de la Vida de Conway en el mínimo d
 prompts posible, con auditoría completa de tokens y costo por respuesta. Enunciado
 completo en `mission.md`, criterios de corrección en `rubric.md`.
 
+<img src="docs/screenshots/landing.jpg" width="900" alt="Vista general de la interfaz">
+
 ## Estructura del repo
 
 | Archivo / carpeta | Qué es |
@@ -46,7 +48,15 @@ Sirve 4 modelos, cada uno pensado para ejercitar una capacidad distinta de la AP
 `SPEC.md` para el detalle): reasoning effort, prompt caching, salidas estructuradas y un
 modelo barato para comparar costo.
 
-<!-- TODO: agregar capturas de la interfaz -->
+### Capacidades en acción
+
+Capturas reales tomadas desde el panel de **HISTORIAL**, cargando logs ya guardados en
+`logs/` — los números de usage son los que realmente devolvió OpenRouter.
+
+| | |
+|---|---|
+| <img src="docs/screenshots/reasoning-effort.jpg" width="420"><br>**Slot 1 — Reasoning effort**<br>Misma pregunta con `effort=low` (`THINK 0`) y con `effort=high` (`THINK 13`): se ve el costo extra de pensar más. | <img src="docs/screenshots/prompt-caching.jpg" width="420"><br>**Slot 2 — Prompt caching**<br>Primer turno con `CACHED 0` (miss, escribe el bloque cacheado); segundo turno con `CACHED 5491` (hit real), el costo cae de $0.0072 a $0.0011. |
+| <img src="docs/screenshots/structured-output.jpg" width="420"><br>**Slot 3 — Salidas estructuradas**<br>Toda respuesta se fuerza a JSON Schema (`respuesta` + `resumen`) vía `response_format`. | |
 
 ## Cómo correr los tests de Conway
 

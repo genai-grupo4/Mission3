@@ -15,6 +15,8 @@ completo en `mission.md`, criterios de corrección en `rubric.md`.
 | `logs/` | Un log `.md` por conversación real con la interfaz, evidencia de auditoría |
 | `vida.py` | Solución al Juego de la Vida de Conway, generada por chat (ejercicio 2) |
 | `test_vida.py` | Script de testing de la cátedra — no se toca |
+| `exploracion.md` | Exploración previa obligatoria del ejercicio 3 (precios, contexto, benchmarks) |
+| `informe_ejercicio3.md` | Informe final del ejercicio 3 |
 | `mission.md` | Enunciado completo de la misión |
 | `rubric.md` | Cómo se corrige |
 | `SPEC.md` | Estado actual de cada ejercicio frente a lo pedido en `mission.md` |
@@ -28,15 +30,23 @@ pip3 install -r requirements.txt
 python3 chat.py
 ```
 
-Abre un server local en `http://127.0.0.1:5000`. Desde el navegador:
+Abre un server local en `http://127.0.0.1:5000` (o el puerto de la variable de entorno
+`PORT`, si está definida — útil para desplegar en plataformas que lo asignan
+dinámicamente). Desde el navegador:
 
 - Elegí uno de los 4 slots de modelo para arrancar una conversación nueva (con su propio log).
 - El toggle de `REASONING EFFORT` ajusta el esfuerzo de razonamiento del modelo activo.
 - Cada respuesta muestra su usage (input/output/reasoning/cached/cost) debajo del mensaje.
+- El panel de **HISTORIAL** a la izquierda lista todas las conversaciones guardadas en
+  `logs/`, agrupadas por modelo. Hacer click en una las recarga completas (con su usage
+  por turno) y permite seguir chateando: los mensajes nuevos se agregan al mismo log en
+  vez de crear uno nuevo.
 
 Sirve 4 modelos, cada uno pensado para ejercitar una capacidad distinta de la API (ver
 `SPEC.md` para el detalle): reasoning effort, prompt caching, salidas estructuradas y un
 modelo barato para comparar costo.
+
+<!-- TODO: agregar capturas de la interfaz -->
 
 ## Cómo correr los tests de Conway
 
@@ -46,5 +56,6 @@ python3 test_vida.py ruta/a/vida.py
 
 ## Estado
 
-Ver `SPEC.md` para el detalle completo. Resumen: ejercicio 1 completo, con los 4 logs de
-evidencia en `logs/`. Ejercicios 2 (`vida.py`) y 3 (informe) no iniciados.
+Ver `SPEC.md` para el detalle completo. Los 3 ejercicios están completos: ejercicio 1
+(interfaz + logs de evidencia en `logs/`), ejercicio 2 (`vida.py`, generado en 1 solo
+prompt, pasa los 9 tests) y ejercicio 3 (informe en `informe_ejercicio3.md`).

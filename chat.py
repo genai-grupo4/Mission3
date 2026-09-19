@@ -55,6 +55,39 @@ def api_session():
     )
 
 
+@app.route("/api/history")
+def api_history():
+    return jsonify(core.list_logs())
+
+
+@app.route("/api/history/load", methods=["POST"])
+def api_history_load():
+    filename = (request.get_json(silent=True) or {}).get("file", "")
+    result = core.load_log(filename)
+    if not result:
+        return jsonify({"error": "log no encontrado"}), 404
+
+    path, history = result
+    slug = path.stem.rsplit("_", 2)[0]
+    model = next((m for m in core.MODELS.values() if m["slug"] == slug), None)
+    if not model:
+        return jsonify({"error": "modelo no reconocido para este log"}), 400
+
+    STATE["model"] = model
+    STATE["history"] = [{"role": h["role"], "content": h["content"]} for h in history]
+    STATE["reasoning_effort"] = model.get("default_effort") if model.get("supports_effort") else None
+    STATE["log_path"] = path
+
+    return jsonify(
+        {
+            "model": model_public(model),
+            "reasoning_effort": STATE["reasoning_effort"],
+            "log_path": str(path.relative_to(core.ROOT)),
+            "history": history,
+        }
+    )
+
+
 @app.route("/api/reasoning", methods=["POST"])
 def api_reasoning():
     effort = (request.get_json(silent=True) or {}).get("effort")

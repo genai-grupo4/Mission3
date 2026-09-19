@@ -22,6 +22,11 @@
   </div>
 
   <div id="app" class="app hidden">
+    <aside class="history-panel">
+      <div class="history-title">HISTORIAL</div>
+      <div class="history-list" id="history-list"></div>
+    </aside>
+    <div class="app-main">
     <header class="hud-header">
       <div class="reactor" id="reactor" title="J.A.R.V.I.S.">
         <div class="ring ring-1"></div>
@@ -61,6 +66,7 @@
       <input type="text" id="input-text" placeholder="Escribí tu mensaje..." disabled autocomplete="off" />
       <button type="submit" id="send-btn" disabled>ENVIAR</button>
     </form>
+    </div>
   </div>
 
   <script src="/app.js"></script>

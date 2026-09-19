@@ -7,6 +7,7 @@ import datetime
 import json
 import os
 import pathlib
+import re
 
 import requests
 
@@ -155,6 +156,67 @@ def append_log(path, role, content, usage_line=None):
         f.write(f"\n## {role} ({ts})\n\n{content}\n")
         if usage_line:
             f.write(f"\n**Usage:** {usage_line}\n")
+
+
+LOG_NAME_RE = re.compile(r"^(?P<slug>.+)_(?P<ts>\d{8}_\d{6})\.md$")
+TURN_RE = re.compile(r"## (user|assistant) \([^)]*\)\n\n(.*?)(?=\n## |\Z)", re.S)
+USAGE_RE = re.compile(
+    r"input=(\d+) output=(\d+) reasoning=(\d+) cached=(\d+) cost=\$([0-9.eE+-]+)"
+)
+
+
+def list_logs():
+    """Conversaciones guardadas en logs/, agrupadas por slot de modelo."""
+    LOGS_DIR.mkdir(exist_ok=True)
+    slug_to_slot = {m["slug"]: slot for slot, m in MODELS.items()}
+    by_slot = {slot: [] for slot in MODELS}
+    for path in LOGS_DIR.glob("*.md"):
+        match = LOG_NAME_RE.match(path.name)
+        if not match:
+            continue
+        slot = slug_to_slot.get(match["slug"])
+        if not slot:
+            continue
+        by_slot[slot].append(
+            {"file": path.name, "started_at": match["ts"], "preview": _log_preview(path)}
+        )
+    for entries in by_slot.values():
+        entries.sort(key=lambda e: e["started_at"], reverse=True)
+    return by_slot
+
+
+def _log_preview(path):
+    text = path.read_text(encoding="utf-8")
+    match = TURN_RE.search(text)
+    if not match:
+        return "(vacio)"
+    line = match.group(2).strip().splitlines()[0]
+    return (line[:60] + "…") if len(line) > 60 else line
+
+
+def load_log(filename):
+    """Reconstruye una conversacion guardada para poder seguir chateando."""
+    path = LOGS_DIR / pathlib.Path(filename).name
+    if not path.is_file():
+        return None
+
+    text = path.read_text(encoding="utf-8")
+    history = []
+    for turn in TURN_RE.finditer(text):
+        role, raw = turn.group(1), turn.group(2)
+        content = raw.split("\n**Usage:**")[0].strip()
+        entry = {"role": role, "content": content}
+        usage_match = USAGE_RE.search(raw)
+        if usage_match:
+            entry["usage"] = {
+                "prompt_tokens": int(usage_match[1]),
+                "completion_tokens": int(usage_match[2]),
+                "reasoning_tokens": int(usage_match[3]),
+                "cached_tokens": int(usage_match[4]),
+                "cost": float(usage_match[5]),
+            }
+        history.append(entry)
+    return path, history
 
 
 def build_messages(model, history, reasoning_effort):

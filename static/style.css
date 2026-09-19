@@ -103,16 +103,94 @@ h1, h2, .brand {
   position: relative;
   z-index: 5;
   height: 100%;
-  display: grid;
-  grid-template-rows: auto auto auto 1fr auto;
-  max-width: 980px;
+  display: flex;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 18px 22px 16px;
-  gap: 14px;
+  gap: 18px;
   transition: opacity 0.5s ease;
 }
 
 .app.hidden { opacity: 0; }
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  gap: 14px;
+}
+
+/* ---------- history panel ---------- */
+
+.history-panel {
+  width: 220px;
+  flex-shrink: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  padding-right: 14px;
+  overflow: hidden;
+}
+
+.history-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+
+.history-list { overflow-y: auto; flex: 1; }
+.history-list::-webkit-scrollbar { width: 6px; }
+.history-list::-webkit-scrollbar-thumb { background: var(--cyan-dim); }
+.history-list::-webkit-scrollbar-track { background: transparent; }
+
+.history-group { margin-bottom: 14px; }
+
+.history-group .group-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--cyan-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.history-entry {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-left: 2px solid var(--border);
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 11px;
+  padding: 6px 8px;
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+
+.history-entry .ts { display: block; font-size: 9px; letter-spacing: 0.5px; color: var(--text-dim); }
+.history-entry .preview { display: block; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.history-entry:hover { border-left-color: var(--cyan-soft); background: rgba(51, 230, 255, 0.05); }
+
+.history-entry.active {
+  border-left-color: var(--cyan);
+  background: rgba(51, 230, 255, 0.1);
+}
+.history-entry.active .preview { color: var(--cyan-soft); }
+
+.history-empty { color: var(--text-dim); font-size: 10px; letter-spacing: 0.5px; }
+
+@media (max-width: 760px) {
+  .history-panel { display: none; }
+}
 
 /* ---------- header ---------- */
 

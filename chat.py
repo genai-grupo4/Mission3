@@ -2,6 +2,7 @@
 """Interfaz de chat sobre OpenRouter: server web local (estilo J.A.R.V.I.S.) que
 sirve 4 modelos, muestra usage y guarda logs .md. Logica de OpenRouter en core.py.
 """
+import os
 import sys
 
 from flask import Flask, jsonify, request, send_from_directory
@@ -113,7 +114,7 @@ def main():
             "va a fallar hasta que la definas.",
             file=sys.stderr,
         )
-    port = 5000
+    port = int(os.environ.get("PORT", 5000))
     print(f"=== J.A.R.V.I.S. — Mision 3 ===\nAbri http://127.0.0.1:{port} en el navegador.")
     app.run(host="127.0.0.1", port=port, debug=False)
 
